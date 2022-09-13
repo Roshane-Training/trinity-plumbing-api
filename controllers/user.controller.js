@@ -1,6 +1,7 @@
 const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
 const User = require('../models/user')
 
+const USER_SELECT_FILTER = '-password -__v'
 class UserController {
 	/**
 	 * Create One Resource
@@ -8,11 +9,15 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		const createdUser = await User.create(req.body).catch((error) => {
-			ErrorResponse(res, 'error creating user', error)
-		})
+		let createdUser
 
-		SuccessResponse(res, 'user created', createdUser, 201)
+		try {
+			createdUser = await User.create(req.body)
+		} catch (error) {
+			return ErrorResponse(res, 'error creating user', error)
+		}
+
+		return SuccessResponse(res, 'user created', createdUser, 201)
 	}
 
 	/**
@@ -21,9 +26,13 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static getAll = async (req, res) => {
-		const users = await User.find().catch((error) => {
+		let users
+
+		try {
+			users = await User.find().select(USER_SELECT_FILTER)
+		} catch (error) {
 			return ErrorResponse(res, 'error finding users with model', error)
-		})
+		}
 
 		if (!users || users.length <= 0)
 			return SuccessResponse(res, 'users are empty at the moment', users)
@@ -37,9 +46,13 @@ class UserController {
 	 * @param {import("express").Response} res
 	 */
 	static getOne = async (req, res) => {
-		const user = await User.findById(req.params.id).catch((error) => {
+		let user
+
+		try {
+			user = await User.findById(req.params.id).select(USER_SELECT_FILTER)
+		} catch (error) {
 			return ErrorResponse(res, 'error finding user with model', error)
-		})
+		}
 
 		if (!user) return SuccessResponse(res, 'user not found', user)
 
@@ -58,9 +71,13 @@ class UserController {
 		if (!email && !role && !password)
 			return ErrorResponse(res, 'nothing sent to update', null, 200)
 
-		const user = await User.findOne({ _id }).catch((error) => {
+		let user
+
+		try {
+			user = await User.findOne({ _id })
+		} catch (error) {
 			return ErrorResponse(res, 'error while trying to find user', error)
-		})
+		}
 
 		if (!user) return ErrorResponse(res, `no user found`)
 
@@ -72,7 +89,7 @@ class UserController {
 			return ErrorResponse(res, 'error updating user', error)
 		})
 
-		SuccessResponse(res, 'user updated', updatedUser)
+		return SuccessResponse(res, 'user updated', updatedUser)
 	}
 
 	/**
@@ -84,7 +101,7 @@ class UserController {
 		let user = await User.findByIdAndRemove(req.params.id, {
 			returnDocument: true,
 		}).catch((error) => {
-			ErrorResponse(res, 'error deleting with user model', error)
+			return ErrorResponse(res, 'error deleting with user model', error)
 		})
 
 		if (!user) return ErrorResponse(res, 'user not found', null)
