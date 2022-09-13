@@ -15,6 +15,7 @@ const FRONTEND_URL = PRODUCTION ? process.env.FRONTEND_URL_PROD : process.env.FR
 const indexRouter = require('./routes/index.routes')
 const userRouter = require('./routes/users.routes')
 const authRouter = require('./routes/auth.routes')
+const contactUsRouter = require('./routes/contact-us.routes')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -25,6 +26,7 @@ const API_VERSION = '/api/v1'
 app.use(API_VERSION + '/', indexRouter)
 app.use(API_VERSION + '/auth', authRouter)
 app.use(API_VERSION + '/users', userRouter)
+app.use(API_VERSION + '/contact-us', contactUsRouter)
 
 mongoose
 	.connect(MONGODB_URI)
