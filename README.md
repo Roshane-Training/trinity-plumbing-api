@@ -4,15 +4,15 @@
 
 ### Install Dependencies
 
--  > `npm i`
+-  `npm i`
 
 ### Setup Environment Variables
 
--  > Copy `.env.example` and rename it to `.env`
+-  Copy `.env.example` and rename it to `.env`
 
 ### Run ExpressJS Server
 
--  > `npm run dev`
+-  `npm run dev`
 
 ## Collaborators
 
