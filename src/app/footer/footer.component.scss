@@ -1,0 +1,155 @@
+.mainFooter{
+  padding: 10px;
+  background-color:#356A8F;
+  height: 450px;
+  display:flex;
+  color:white
+
+}
+.mainFooter .main4 {
+  width: 25%;
+
+}
+
+//BORDER HAS TO BE Commented IT JuST FOR TESTING
+// .main4 {
+//   border: black solid 1px ;
+// }
+
+// .logo .child1{
+
+// }
+.logo  img {
+
+  margin-top: 40px;
+  padding-bottom: 52px;
+
+
+}
+
+
+
+.main4 .text{
+  width:300px;
+  text-align: center;
+  position: relative;
+  left: 50px;
+
+}
+.main4 .contact {
+  text-align: left;
+  margin-left: 50px;
+}
+
+.copyRight{
+  height: 20px;
+  background-color: #274D67;
+  margin-bottom: 0%;
+  padding: 10px;
+}
+
+.copyRight p {
+  position: relative;
+bottom: 60%;
+color:white
+
+}
+
+
+//Links CSS I just figured out how to use nests with SCSS styles
+.links {
+
+  margin-top: 150px;
+  h3 {
+    font-weight: bolder;
+  }
+}
+
+.subLinks {
+  display: flex;
+  margin-left: 10%;
+  word-spacing: 5px;
+
+  div{
+    padding: 20px;
+    // border: black solid 1px ;
+    ul {
+      position: relative;
+      list-style: none;
+    }
+    li {
+      padding-bottom: 5px;
+      text-align: left;
+    }
+    li::before {
+      content: '➣';
+      position: absolute;
+      left: 20px;
+    }
+
+    }
+}
+
+
+//NEWS PART
+.news {
+  margin-top: 150px;
+  h3 {
+    font-weight: bolder;
+  }
+
+  div{
+    padding: 20px;
+    padding-bottom: 0px;
+
+  }
+  .spacer {
+
+  }
+  .timer {
+    color: #95D3FF;
+  }
+}
+
+//NEWS LETTER
+.letter {
+  margin-top: 150px;
+  h3 {
+    font-weight: bolder;
+  }
+
+  div{
+    padding: 20px;
+    padding-bottom: 0px;
+
+  }
+  .spacer {
+    padding-bottom: 20px;
+  }
+  .timer {
+    color: #95D3FF;
+  }
+  input {
+    background-color: #3374A4;
+    height: 30px;
+    width: 250px;
+    border: none;
+    color: white;
+    padding: 5px;
+
+  }
+  button {
+    background-color: #66C0FF;
+    height: 30px;
+    width: 250px;
+    border: none;
+    color: white
+
+
+  }
+  button:hover {
+    cursor: pointer;
+    background-color: #041563;
+  }
+
+}
