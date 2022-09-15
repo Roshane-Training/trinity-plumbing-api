@@ -1,7 +1,8 @@
 const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
 const Admin = require('../models/admin')
 
-const SELECT_FILTER = '-password -__v'
+// const SELECT_FILTER = '-password -__v'
+const SELECT_FILTER = ''
 class AdminController {
 	/**
 	 * Create One Resource
@@ -84,11 +85,7 @@ class AdminController {
 		let updatedAdmin
 
 		try {
-			updatedAdmin = await Admin.updateOne({ _id }, req.body, {
-				returnDocument: true,
-				returnOriginal: true,
-				new: true,
-			})
+			updatedAdmin = await Admin.update({ _id }, req.body)
 		} catch (error) {
 			return ErrorResponse(res, 'error updating admin', error)
 		}

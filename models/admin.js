@@ -16,11 +16,13 @@ const Admin = new Schema(
 
 Admin.pre('save', async function (next) {
 	if (this.password && this.isModified('password')) {
-		const salt = await bcrypt.genSalt(10).catch((error) => console.log(error))
+		const salt = await bcrypt
+			.genSalt(10)
+			.catch((error) => console.log('Bcrypt GenSalt', error))
 
 		const hashedPassword = await bcrypt
 			.hash(this.password, salt)
-			.catch((error) => console.log(error))
+			.catch((error) => console.log('Bcrypt Hash', error))
 
 		this.password = hashedPassword
 
@@ -29,5 +31,7 @@ Admin.pre('save', async function (next) {
 		throw new Error('fatal error while running `admins` pre save model middleware')
 	}
 })
+
+//TODO rehash password after it is updated.
 
 module.exports = mongoose.model('admins', Admin)
