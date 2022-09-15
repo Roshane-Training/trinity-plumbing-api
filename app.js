@@ -20,6 +20,7 @@ const productRouter = require('./routes/products.route')
 const serviceRouter = require('./routes/services.route')
 const plumberRouter = require('./routes/plumbers.route')
 const contactUsRouter = require('./routes/contact-us.routes')
+const issueRouter = require('./routes/issue.routes')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -35,6 +36,7 @@ app.use(API_VERSION + '/products', productRouter)
 app.use(API_VERSION + '/services', serviceRouter)
 app.use(API_VERSION + '/plumbers', plumberRouter)
 app.use(API_VERSION + '/contact-us', contactUsRouter)
+app.use(API_VERSION + '/issues', issueRouter)
 
 mongoose
 	.connect(MONGODB_URI)
