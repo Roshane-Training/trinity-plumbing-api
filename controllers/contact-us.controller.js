@@ -13,7 +13,7 @@ class ContactUsController {
 		try {
 			document = await ContactUs.create(req.body)
 		} catch (error) {
-			return ErrorResponse(res, 'error creating contact-us', error)
+			return ErrorResponse(res, 'error creating contact-us', error, 400)
 		}
 
 		return SuccessResponse(res, 'contact-us created', document, 201)
@@ -30,7 +30,7 @@ class ContactUsController {
 		try {
 			documents = await ContactUs.find()
 		} catch (error) {
-			return ErrorResponse(res, 'error finding contact-us with model', error)
+			return ErrorResponse(res, 'error finding contact-us with model', error, 400)
 		}
 
 		if (!documents || documents.length <= 0)
@@ -50,7 +50,7 @@ class ContactUsController {
 		try {
 			document = await ContactUs.findById(req.params.id)
 		} catch (error) {
-			return ErrorResponse(res, 'error finding contact-us with model', error)
+			return ErrorResponse(res, 'error finding contact-us with model', error, 400)
 		}
 
 		if (!document) return SuccessResponse(res, 'contact-us not found', document)
@@ -104,7 +104,7 @@ class ContactUsController {
 				returnDocument: true,
 			})
 		} catch (error) {
-			return ErrorResponse(res, 'error deleting with contact-us model', error)
+			return ErrorResponse(res, 'error deleting with contact-us model', error, 400)
 		}
 
 		if (!document) return ErrorResponse(res, 'contact-us not found', null)
