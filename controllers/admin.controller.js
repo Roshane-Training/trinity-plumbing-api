@@ -15,10 +15,10 @@ class AdminController {
 		try {
 			createdAdmin = await Admin.create(req.body)
 		} catch (error) {
-			return ErrorResponse(res, 'error creating user', error)
+			return ErrorResponse(res, 'error creating admin', error)
 		}
 
-		return SuccessResponse(res, 'user created', createdAdmin, 201)
+		return SuccessResponse(res, 'admin created', createdAdmin, 201)
 	}
 
 	/**
@@ -66,11 +66,9 @@ class AdminController {
 	 * @param {import("express").Response} res
 	 */
 	static updateOne = async (req, res) => {
-		const { email, password } = req.body
 		const { id: _id } = req.params
 
-		if (!email && !password)
-			return ErrorResponse(res, 'nothing sent to update', null, 200)
+		if (!req.body) return ErrorResponse(res, 'nothing sent to update', null, 200)
 
 		let admin
 
@@ -85,7 +83,7 @@ class AdminController {
 		let updatedAdmin
 
 		try {
-			updatedAdmin = await Admin.update({ _id }, req.body)
+			updatedAdmin = await Admin.updateOne({ _id }, req.body)
 		} catch (error) {
 			return ErrorResponse(res, 'error updating admin', error)
 		}
