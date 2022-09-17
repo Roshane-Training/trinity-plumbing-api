@@ -41,7 +41,7 @@ class ServiceController {
 	static getOne = async (req, res) => {
 		try {
 			const service = await Service.findById(req.params.id)
-			if (!product) SuccessResponse(res, 'service not found', service)
+			if (!service) SuccessResponse(res, 'service not found', service)
 
 			SuccessResponse(res, 'service found', service)
 		} catch (error) {
