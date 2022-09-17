@@ -2,101 +2,102 @@ const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
 const Service = require('../models/service')
 
 class ServiceController {
-
-     /**
-     * Create One Service Resource
-     * @param {import("express").Request} req
+	/**
+	 * Create One Service Resource
+	 * @param {import("express").Request} req
 	 * @param {import("express").Response} res
-     */
-      static createOne = async (req, res) => {
-        const createdService = await Service.create(req.body).catch((error) => {
-            ErrorResponse(res, 'error creating service', error, 500)
-        })
+	 */
+	static createOne = async (req, res) => {
+		try {
+			const createdService = await Service.create(req.body)
+			SuccessResponse(res, 'service created', createdService, 201)
+		} catch (error) {
+			ErrorResponse(res, 'error creating service', error, 500)
+		}
+	}
 
-        SuccessResponse(res, 'service created', createdService, 201)
-    }
-
-
-    /**
-     * Get All Service Resources
-     * @param {import("express").Request} req
+	/**
+	 * Get All Service Resources
+	 * @param {import("express").Request} req
 	 * @param {import("express").Response} res
-     */
-     static getAll = async (req, res) => {
-        const services = await Service.find().catch((error) => {
-            return ErrorResponse(res, 'error finding services', error, 500)
-        })
+	 */
+	static getAll = async (req, res) => {
+		try {
+			const services = await Service.find()
+			if (!services || services.lenght <= 0)
+				SuccessResponse(res, 'there are no services at the moment', services)
 
-        if (!services || services.lenght <= 0)
-            return SuccessResponse(res, 'there are no services at the moment', services)
+			SuccessResponse(res, 'services found', services)
+		} catch (error) {
+			ErrorResponse(res, 'error finding services', error, 500)
+		}
+	}
 
-        return SuccessResponse(res, 'services found', services)
-    }
-
-
-    /**
-     * Get One Service Resource
-     * @param {import("express").Request} req
+	/**
+	 * Get One Service Resource
+	 * @param {import("express").Request} req
 	 * @param {import("express").Response} res
-     */
-     static getOne = async (req, res) => {
-        const service = await Service.findById(req.params.id).catch((error) => {
-            return ErrorResponse(res, 'error finding the service', error, 500)
-        })
+	 */
+	static getOne = async (req, res) => {
+		try {
+			const service = await Service.findById(req.params.id)
+			if (!product) SuccessResponse(res, 'service not found', service)
 
-        if (!product) return SuccessResponse(res, 'service not found', service)
+			SuccessResponse(res, 'service found', service)
+		} catch (error) {
+			ErrorResponse(res, 'error finding the service', error, 500)
+		}
+	}
 
-        return SuccessResponse(res, 'service found', service)
-    }
-
-
-    /**
-     * Update One Service Resource
-    *  @param {import("express").Request} req
+	/**
+	 * Update One Service Resource
+	 *  @param {import("express").Request} req
 	 * @param {import("express").Response} res
-     */
-     static updateOne = async (req, res) => {
-        const { image, title, description, price } = req.body
-        const { id: _id } = req.params
+	 */
+	static updateOne = async (req, res) => {
+		const { id: _id } = req.params
 
-        if (!image && !title && !description && !price)
-            return ErrorResponse(res, 'no data sent for an update', null, 200)
+		if (!req.body) ErrorResponse(res, 'no data sent for an update', null, 200)
 
-        const service = await Service.findOne({ _id }).catch((error) => {
-            return ErrorResponse(res, 'error while trying to find service', error, 500)
-        })
+		try {
+			const service = await Service.findOne({ _id })
 
-        if (!service) return ErrorResponse(res, 'no service found')
+			if (!service) ErrorResponse(res, 'no service found')
+			try {
+				const updatedService = await Service.updateOne({ _id }, req.body, {
+					returnDocument: true,
+					returnOriginal: true,
+					new: true,
+				})
 
-        const updatedService = await Service.updateOne(
-            { _id },
-            { image, title, description, price },
-            { returnDocument: true, returnOriginal: true, new: true }
-        ).catch((error) => {
-            return ErrorResponse(res, 'error updating service', error, 500)
-        })
+				SuccessResponse(res, 'service updated', updatedService)
+			} catch (error) {
+				ErrorResponse(res, 'error updating service', error, 500)
+			}
+		} catch (error) {
+			ErrorResponse(res, 'error while trying to find service', error, 500)
+		}
+	}
 
-        SuccessResponse(res, 'service updated', updatedService)
-    }
-
-
-    /**
-     * Delete One Service Resource
-     * @param {import("express").Request} req
+	/**
+	 * Delete One Service Resource
+	 * @param {import("express").Request} req
 	 * @param {import("express").Response} res
-     */
-    static deleteOne = async (req, res) => {
-        let service = await Service.findByIdAndRemove(req.params.id, {
-            returnDocument: true,
-        }).catch((error) => {
-            ErrorResponse(res, 'error deleting service', error, 500)
-        })
+	 */
+	static deleteOne = async (req, res) => {
+		try {
+			const service = await Service.findByIdAndRemove(req.params.id, {
+				returnDocument: true,
+			})
 
-        if(!service) return ErrorResponse(res, 'service not found for deletion', null, 200)
+			if (!service)
+				return ErrorResponse(res, 'service not found for deletion', null, 200)
 
-        return SuccessResponse(res, 'service deleted', service.title)
-    }
-
+			SuccessResponse(res, 'service deleted', { deletedService: service })
+		} catch (error) {
+			ErrorResponse(res, 'error deleting service', error, 500)
+		}
+	}
 }
 
 module.exports = ServiceController
