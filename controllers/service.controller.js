@@ -24,7 +24,7 @@ class ServiceController {
 	static getAll = async (req, res) => {
 		try {
 			const services = await Service.find()
-			if (!services || services.lenght <= 0)
+			if (!services || services.length <= 0)
 				SuccessResponse(res, 'there are no services at the moment', services)
 
 			SuccessResponse(res, 'services found', services)
