@@ -48,6 +48,20 @@ class ProductController {
 
         return SuccessResponse(res, 'product found', product)
     }
+    /**
+     * Get One Product Resource
+     * @param {import("express").Request} req
+	 * @param {import("express").Response} res
+     */
+    static getOnebyname = async (req, res) => {
+        const product = await Product.findById(req.params.name).catch((error) => {
+            return ErrorResponse(res, 'error finding the product with model', error, 500)
+        })
+
+        if (!product) return SuccessResponse(res, 'product not found', product)
+
+        return SuccessResponse(res, 'product found', product)
+    }
 
 
 
