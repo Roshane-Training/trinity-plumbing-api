@@ -9,7 +9,7 @@ const RequestSchema = new Schema(
 		email: { type: String, required: true },
 		address: { type: String, required: true },
 		plumber: { type: Schema.Types.ObjectId, ref: 'plumbers', required: true },
-		service: { type: Schema.Types.ObjectId, ref: 'services' },
+		service: { type: String, ref: 'services' },
 		issue: { type: String, required: true },
 	},
 
