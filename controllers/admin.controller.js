@@ -1,5 +1,6 @@
 const { SuccessResponse, ErrorResponse } = require('../lib/helpers')
 const Admin = require('../models/admin')
+const bcrypt = require('bcrypt')
 
 // const SELECT_FILTER = '-password -__v'
 const SELECT_FILTER = ''
@@ -10,15 +11,12 @@ class AdminController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		let createdAdmin
-
 		try {
-			createdAdmin = await Admin.create(req.body)
+			const createdAdmin = await Admin.create(req.body)
+			SuccessResponse(res, 'admin created', createdAdmin, 201)
 		} catch (error) {
-			return ErrorResponse(res, 'error creating admin', error)
+			ErrorResponse(res, 'error creating admin', error)
 		}
-
-		return SuccessResponse(res, 'admin created', createdAdmin, 201)
 	}
 
 	/**
@@ -32,13 +30,13 @@ class AdminController {
 		try {
 			admins = await Admin.find().select(SELECT_FILTER)
 		} catch (error) {
-			return ErrorResponse(res, 'error finding admins with model', error)
+			ErrorResponse(res, 'error finding admins with model', error)
 		}
 
 		if (!admins || admins.length <= 0)
-			return SuccessResponse(res, 'admins are empty at the moment', admins)
+			ErrorResponse(res, 'admins are empty at the moment', admins)
 
-		return SuccessResponse(res, 'admins found', admins)
+		SuccessResponse(res, 'admins found', admins)
 	}
 
 	/**
@@ -52,12 +50,12 @@ class AdminController {
 		try {
 			admin = await Admin.findById(req.params.id).select(SELECT_FILTER)
 		} catch (error) {
-			return ErrorResponse(res, 'error finding admin with model', error)
+			ErrorResponse(res, 'error finding admin with model', error)
 		}
 
-		if (!admin) return SuccessResponse(res, 'admin not found', admin)
+		if (!admin) SuccessResponse(res, 'admin not found', admin)
 
-		return SuccessResponse(res, 'admin found', admin)
+		SuccessResponse(res, 'admin found', admin)
 	}
 
 	/**
@@ -68,27 +66,22 @@ class AdminController {
 	static updateOne = async (req, res) => {
 		const { id: _id } = req.params
 
-		if (!req.body) return ErrorResponse(res, 'nothing sent to update', null, 200)
-
-		let admin
+		if (!req.body) ErrorResponse(res, 'nothing sent to update', null, 200)
 
 		try {
-			admin = await Admin.findOne({ _id })
+			const admin = await Admin.findOne({ _id })
+			if (!admin) ErrorResponse(res, 'no admins found')
 		} catch (error) {
-			return ErrorResponse(res, 'error while trying to find admin', error)
+			ErrorResponse(res, 'error while trying to find admin', error)
 		}
-
-		if (!admin) return ErrorResponse(res, 'no admins found')
-
-		let updatedAdmin
 
 		try {
-			updatedAdmin = await Admin.updateOne({ _id }, req.body)
+			req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+			const updateResponse = await Admin.updateOne({ _id }, req.body)
+			SuccessResponse(res, 'admin updated', updateResponse)
 		} catch (error) {
-			return ErrorResponse(res, 'error updating admin', error)
+			ErrorResponse(res, 'error updating admin', error)
 		}
-
-		return SuccessResponse(res, 'admin updated', updatedAdmin)
 	}
 
 	/**
@@ -97,19 +90,17 @@ class AdminController {
 	 * @param {import("express").Response} res
 	 */
 	static deleteOne = async (req, res) => {
-		let admin
-
 		try {
-			admin = await Admin.findByIdAndRemove(req.params.id, {
-				returnDocument: true,
+			const admin = await Admin.findByIdAndRemove(req.params.id, {
+				Document: true,
 			})
+
+			if (!admin) ErrorResponse(res, 'admin not found', null)
+
+			SuccessResponse(res, 'admin deleted', { deletedAdmin: admin })
 		} catch (error) {
-			return ErrorResponse(res, 'error deleting with admin model', error)
+			ErrorResponse(res, 'error deleting with admin model', error)
 		}
-
-		if (!admin) return ErrorResponse(res, 'admin not found', null)
-
-		return SuccessResponse(res, 'admin deleted', { deletedAdmin: admin })
 	}
 }
 

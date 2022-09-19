@@ -8,11 +8,12 @@ class PlumberController {
 	 * @param {import("express").Response} res
 	 */
 	static createOne = async (req, res) => {
-		const createdPlumber = await Plumber.create(req.body).catch((error) => {
+		try {
+			const createdPlumber = await Plumber.create(req.body)
+			SuccessResponse(res, 'plumber created', createdPlumber, 201)
+		} catch (error) {
 			ErrorResponse(res, 'error creating plumber', error, 500)
-		})
-
-		SuccessResponse(res, 'plumber created', createdPlumber, 201)
+		}
 	}
 
 	/**

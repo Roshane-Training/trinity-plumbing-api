@@ -10,11 +10,6 @@ const UserSchema = new Schema(
 			unique: true,
 		},
 		password: { type: String, required: true },
-		role: {
-			type: String,
-			enum: ['admin', 'user'],
-			required: true,
-		},
 	},
 	{ timestamps: true, collection: 'users' }
 )

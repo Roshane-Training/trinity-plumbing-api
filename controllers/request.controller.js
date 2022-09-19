@@ -12,18 +12,7 @@ class RequestController {
 			const createdRequest = await Request.create(req.body)
 			SuccessResponse(res, 'request created', createdRequest, 201)
 		} catch (err) {
-			let errors = []
-
-			if (err.errors) {
-				for (const error in err.errors) {
-					errors.push({
-						type: err.errors[error].kind,
-						message: `Ensure that \`${error}\` has a valid ${err.errors[error].kind}`,
-					})
-				}
-			}
-
-			ErrorResponse(res, 'error creating request', errors, 500)
+			ErrorResponse(res, 'error creating request', err, 500)
 		}
 	}
 

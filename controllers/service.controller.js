@@ -24,8 +24,9 @@ class ServiceController {
 	static getAll = async (req, res) => {
 		try {
 			const services = await Service.find()
+
 			if (!services || services.length <= 0)
-				SuccessResponse(res, 'there are no services at the moment', services)
+				return SuccessResponse(res, 'there are no services at the moment', services)
 
 			SuccessResponse(res, 'services found', services)
 		} catch (error) {
@@ -41,7 +42,7 @@ class ServiceController {
 	static getOne = async (req, res) => {
 		try {
 			const service = await Service.findById(req.params.id)
-			if (!service) SuccessResponse(res, 'service not found', service)
+			if (!service) return SuccessResponse(res, 'service not found', service)
 
 			SuccessResponse(res, 'service found', service)
 		} catch (error) {
@@ -57,12 +58,12 @@ class ServiceController {
 	static updateOne = async (req, res) => {
 		const { id: _id } = req.params
 
-		if (!req.body) ErrorResponse(res, 'no data sent for an update', null, 200)
+		if (!req.body) return ErrorResponse(res, 'no data sent for an update', null, 200)
 
 		try {
 			const service = await Service.findOne({ _id })
 
-			if (!service) ErrorResponse(res, 'no service found')
+			if (!service) return ErrorResponse(res, 'no service found')
 			try {
 				const updatedService = await Service.updateOne({ _id }, req.body, {
 					returnDocument: true,
