@@ -22,7 +22,7 @@ class AuthController {
 		})
 
 		if (!existingUser) {
-			return ErrorResponse(res, "we couldn't find your account", null)
+			return ErrorResponse(res, "we couldn't find your account", null, 404)
 		}
 
 		const isValidLogin = bcrypt.compareSync(password, existingUser.password)
