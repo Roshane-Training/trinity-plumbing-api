@@ -53,8 +53,8 @@ class ProductController {
      * @param {import("express").Request} req
 	 * @param {import("express").Response} res
      */
-    static getOnebyname = async (req, res) => {
-        const product = await Product.findById(req.params.name).catch((error) => {
+    static getOneByName = async (req, res) => {
+        const product = await Product.find({ name: req.params.name }).catch((error) => {
             return ErrorResponse(res, 'error finding the product with model', error, 500)
         })
 
